@@ -1,18 +1,26 @@
-var currentWindowWidth = 0;
+var tilesNumber = 0;
 
 var yotubeCollection;
 
 window.onresize =  function () {
-    if (self.innerWidth - currentWindowWidth > 300) {
-        currentWindowWidth = self.innerWidth;
-        var index = (currentWindowWidth - currentWindowWidth % 300) / 300 - 1;
-        addElement(index, window.yotubeCollection[index], 300);
+    if (freePlaceExists()) {
+        addElement(tilesNumber, yotubeCollection[tilesNumber], 300);
+        window.tilesNumber++;
     }
 
-    if (currentWindowWidth - self.innerWidth > 300) {
-        currentWindowWidth = self.innerWidth;
+    if (((tilesNumber + 1) * 300 - self.innerWidth > 300) && (tilesNumber !=1)) {
+        window.tilesNumber--;
         var parent = document.getElementById("content");
         parent.removeChild(parent.lastChild);
+    }
+}
+
+function freePlaceExists() {
+    if (self.innerWidth - window.tilesNumber * 300 > 500) {
+        return true;      
+   }
+    else {
+        return false;    
     }
 }
 
@@ -56,7 +64,7 @@ function addElement(number, someContent , elementWidth) {
     'use strict';
     var parent = document.getElementById("content");
     var container = createComponent('container', someContent);
-    setPosition(container, (elementWidth + 30) * number);
+    setPosition(container, (elementWidth + 40) * number);
     parent.appendChild(container);
 }
 
@@ -90,9 +98,9 @@ function httpGet(Url) {
 }
 
 function myJsonPCallback(data) {
+    var index;
     yotubeCollection = convertYouTubeResponseToClipList(data);
-
-    for(index = 0; index < window.currentWindowWidth/300 - 1; index++) {
+    for(index = 0; index < window.tilesNumber; index++) {
         addElement(index, yotubeCollection[index], 300);             
     }
 }
@@ -142,8 +150,7 @@ var mouseClickEvent = function(event) {
 }
 
 // **************** Functions declarations *********************************//
-currentWindowWidth = self.innerWidth;
-old = self.innerWidth;
+window.tilesNumber = (self.innerWidth - self.innerWidth % 300) / 300;
 
 var content = createMainContent('content');
 document.body.appendChild(content);
