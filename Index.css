@@ -5,23 +5,23 @@
     height: 500px;
     width: 300px;
     margin-left: 30px;
-    margin-top: 30px;
+    margin-top: 50px;
+    border: solid #6c6c6c 2px;
 }
 
 .container:hover
 {
-    height: 550px;   
+    height: 560px;   
     -webkit-transition: all 0.5s ease;
 }
 
 .content
 {
     position: absolute;
-    background: #a8a8a8;
+    background: #f4f4f4;
     width: 100%;
-    height: 700px;
-    padding-top: 10px;
-    padding-left: 20px;
+    height: 90%;
+    padding-top: 20px;
 }
 
 .searchBox
@@ -34,6 +34,7 @@
 
 .searchButton
 {
+    float: left;
     position: absolute;
     left: 50%;
     width: 60px;
@@ -53,9 +54,12 @@
 {
     position: absolute;
     height: 60px;
-    width: 100px;
-    background: grey;  
+    width: 97px; 
+    background-image: -webkit-linear-gradient(top, #D1CFCA 18%, #F5F5F5 79%);
     bottom: 0;
+    border: solid 2px;
+    border-right: solid 1px;
+    text-align: center;
 }
 
 .author
@@ -83,9 +87,9 @@
 {
     position: absolute;
     width: 100%;
-    height: 80px;
-    bottom: 50px;
-    background: black;
+    height: 10%;
+    bottom: 0px;
+    background: #575757;
 }
 
 body
