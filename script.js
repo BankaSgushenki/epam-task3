@@ -1,14 +1,15 @@
 var tilesNumber = 0;
+var selectedTile = 0;
 
 var yotubeCollection;
 
 window.onresize =  function () {
-    if (freePlaceExists()) {
+    if ((freePlaceExists()) && (tilesNumber > 0)) {
         addElement(tilesNumber, yotubeCollection[tilesNumber], 300);
         window.tilesNumber++;
     }
 
-    if (((tilesNumber + 1) * 300 - self.innerWidth > 300) && (tilesNumber !=1)) {
+    if (((tilesNumber + 1) * 300 - self.innerWidth > 300) && (tilesNumber >1)) {
         window.tilesNumber--;
         var parent = document.getElementById("content");
         parent.removeChild(parent.lastChild);
@@ -24,10 +25,10 @@ function freePlaceExists() {
     }
 }
 
-function createComponent(className, rawYouTubeData) {
+function createComponent(className, rawYouTubeData, number) {
     'use strict';
     var container = document.createElement('div');
-    container.innerHTML = '<div class="' + className + '"> \
+    container.innerHTML = '<div id = "' + number + '" class="' + className + '"> \
     <div class= "title">' + rawYouTubeData.title + ' </div> \
     <iframe src= "' + rawYouTubeData.youtubeLink + '" allowfullscreen="" frameborder="0"></iframe> \
     <div class = "description"> ' + rawYouTubeData.description + '</div> \
@@ -63,7 +64,7 @@ function setPosition(container, horizontalMargin) {
 function addElement(number, someContent , elementWidth) {
     'use strict';
     var parent = document.getElementById("content");
-    var container = createComponent('container', someContent);
+    var container = createComponent('container', someContent, number);
     setPosition(container, (elementWidth + 40) * number);
     parent.appendChild(container);
 }
@@ -99,6 +100,8 @@ function httpGet(Url) {
 
 function myJsonPCallback(data) {
     var index;
+    clearAll();
+    window.tilesNumber = (self.innerWidth - self.innerWidth % 300) / 300 - 1;
     yotubeCollection = convertYouTubeResponseToClipList(data);
     for(index = 0; index < window.tilesNumber; index++) {
         addElement(index, yotubeCollection[index], 300);             
@@ -118,24 +121,19 @@ function removeContainer(container) {
 }
 
 function clearAll() {
-    var parent = document.getElementById("content");
-    var elements = parent.children;
-    for(var index = 1; index < elements.length; index++) {
-        elements[index].parentNode.removeChild(elements[index]);
-        parent.removeChild(elements[index]);
-        console.log(index);
+    if(window.tilesNumber!=0) {
+        var parent = document.getElementById("content");
+        var elements = parent.children;
+        for(var index = 0; index < window.tilesNumber; index++) {
+            parent.removeChild(parent.lastChild);
+        }
     }
 }
 
 var searchEvent = function(event) {
-    if((event.keyCode==13)||(event.keyCode==32)) {
-    clearAll();
-    httpGet(createRequestURL()); 
+    if((event.keyCode==13)||(event.keyCode==32)) { 
+        httpGet(createRequestURL()); 
     }
-}
-
-var test = function() {
-    clearAll();
 }
 
 var mouseClickEvent = function(event) {
@@ -147,10 +145,10 @@ var mouseClickEvent = function(event) {
     }
     event.target.parentNode.style.border = "solid grey 5px";
     event.target.parentNode.style.height = "560px";
+    window.selectedTile = event.target.parentNode.getAttribute("id");
 }
 
 // **************** Functions declarations *********************************//
-window.tilesNumber = (self.innerWidth - self.innerWidth % 300) / 300;
 
 var content = createMainContent('content');
 document.body.appendChild(content);
