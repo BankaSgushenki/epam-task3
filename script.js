@@ -13,6 +13,7 @@ window.onresize =  function () {
         window.tilesNumber--;
         var parent = document.getElementById("content");
         parent.removeChild(parent.lastChild);
+        removeFromToolTip();
     }
 }
 
@@ -52,7 +53,7 @@ return container.firstChild;
 function createToolTip(className) {
     'use strict';
     var container = document.createElement('div');
-    container.innerHTML = '<div class="' + className + '"> \
+    container.innerHTML = '<div id = "tooltip" class="' + className + '"> \
     </div>';
 return container.firstChild;
 }
@@ -67,6 +68,7 @@ function addElement(number, someContent , elementWidth) {
     var container = createComponent('container', someContent, number);
     setPosition(container, (elementWidth + 40) * number);
     parent.appendChild(container);
+    addToToolltip(number);
 }
 
 function convertYouTubeResponseToClipList(rawYouTubeData) {
@@ -130,6 +132,17 @@ function clearAll() {
     }
 }
 
+function selectingItem(item) {
+    var parent = document.getElementById("content");
+    var elements = parent.children;
+    for(var index = 1; index < elements.length; index++) {
+        elements[index].style.border = "solid #6c6c6c 2px";
+        elements[index].style.height = "500px";
+    }
+    item.style.border = "solid grey 5px";
+    item.style.height = "560px";
+}
+
 var searchEvent = function(event) {
     if((event.keyCode==13)||(event.keyCode==32)) { 
         httpGet(createRequestURL()); 
@@ -137,15 +150,36 @@ var searchEvent = function(event) {
 }
 
 var mouseClickEvent = function(event) {
-    var parent = document.getElementById("content");
-    var elements = parent.children;
-    for(var index = 1; index < elements.length; index++) {
-        elements[index].style.border = "solid #6c6c6c 2px";
-        elements[index].style.height = "500px";
-    }
-    event.target.parentNode.style.border = "solid grey 5px";
-    event.target.parentNode.style.height = "560px";
+    selectingItem(event.target.parentNode);
     window.selectedTile = event.target.parentNode.getAttribute("id");
+}
+
+var onTooltipClickEvent = function(event) {
+    window.selectedTile = event.target.getAttribute("id");
+    
+    var parent = document.getElementById("tooltip");
+    var elements = parent.children;
+    for(var index = 0; index < elements.length; index++) {
+        elements[index].style.background = "#eaeaea";
+    }
+    event.target.style.background = "black";
+    var item = document.getElementById(window.selectedTile);
+    selectingItem(item);
+}
+
+
+function addToToolltip(tilesNumber) {
+    var tooltip = document.getElementById("tooltip");
+    var prototype = document.createElement('div');
+    prototype.innerHTML = '<div id = "' + tilesNumber + '" class="tileLink"></div>'
+    setPosition(prototype.firstChild, (500 + tilesNumber* 50));
+    prototype.firstChild.onclick  = onTooltipClickEvent;
+    tooltip.appendChild(prototype.firstChild);
+}
+
+function removeFromToolTip() {
+    var tooltip = document.getElementById("tooltip");
+    tooltip.removeChild(tooltip.lastChild);
 }
 
 // **************** Functions declarations *********************************//

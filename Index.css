@@ -27,7 +27,7 @@
 .searchBox
 {
     position: absolute;
-    left: 40%;
+    right: 100px;
     width: 150px;
 
 }
@@ -90,6 +90,17 @@
     height: 10%;
     bottom: 0px;
     background: #575757;
+    padding-top: 30px;
+    padding-left: 40%;
+}
+
+.tileLink
+{
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background: #eaeaea;
+    border-radius: 8px;
 }
 
 body
