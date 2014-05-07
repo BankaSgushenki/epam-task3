@@ -15,10 +15,12 @@ window.onresize =  function () {
     }
 
     if (((tilesNumber + 1) * 300 - self.innerWidth > 300) && (tilesNumber >1)) {
-        window.tilesNumber--;
         var parent = document.getElementById("content");
         parent.removeChild(parent.lastChild);
+        window.lastElementNumber --;
+        window.tilesNumber--;
     }
+    updateTooltip();
 }
 
 function freePlaceExists() {
@@ -117,6 +119,11 @@ function httpGet(Url) {
 function myJsonPCallback(data) {
     var index;
     clearAll();
+    window.firstTileNumber = 0;
+    window.selectedTile = 0;
+    window.mouseX = 0;
+    window.lastElementNumber = 0;
+
     window.tilesNumber = (self.innerWidth - self.innerWidth % 300) / 300 - 1;
     yotubeCollection = convertYouTubeResponseToClipList(data);
     for(index = 0; index < window.tilesNumber; index++) {
@@ -140,11 +147,19 @@ function removeContainer(container) {
 }
 
 function clearAll() {
+    var index;
     if(window.tilesNumber!=0) {
         var parent = document.getElementById("content");
         var elements = parent.children;
-        for(var index = 0; index < window.tilesNumber; index++) {
+        for(index = 0; index < window.tilesNumber; index++) {
             parent.removeChild(parent.lastChild);
+        }
+        var tooltip = document.getElementById("tooltip");
+        elements = tooltip.children;
+        var length = elements.length;
+        for(index = 0; index < length; index++) {
+            console.log(elements.length);
+            tooltip.removeChild(tooltip.lastChild);
         }
     }
 }
@@ -169,13 +184,18 @@ var mouseDownEvent = function(event) {
 }
 
 var mouseUpEvent = function(event) {
+    var scrollSpeed;
     var setupFild = document.getElementById("scrollSetup");
-    var scrollSpeed = setupFild.value;
-    if (window.mouseX - event.pageX > 200) {
+    console.log(setupFild.value);
+    if(setupFild.value == null)
+        scrollSpeed = 1;
+    else
+        scrollSpeed = setupFild.value;
+    if ((window.mouseX - event.pageX > 200) && (lastElementNumber < yotubeCollection.length)) {
        scrollForward(scrollSpeed);
     }
     
-    if (event.pageX - window.mouseX > 200) {
+    if ((event.pageX - window.mouseX > 200) && (firstTileNumber > 0)){
        scrollBack(scrollSpeed);
     }
         
@@ -243,7 +263,6 @@ var onTooltipClickEvent = function(event) {
         selectingItem(item);
     }
     else if (selectedTile < firstTileNumber){
-        console.log(firstTileNumber, selectedTile);
         scrollBack(firstTileNumber - selectedTile);
         var parent = document.getElementById("tooltip");
         var elements = parent.children;

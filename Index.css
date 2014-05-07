@@ -8,6 +8,7 @@
     margin-top: 50px;
     border: solid #343434 1px;
     -webkit-transition: 0.5s cubic-bezier(.18,.56,.36,.81);
+    
 }
 
 .container:hover
