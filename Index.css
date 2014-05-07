@@ -5,10 +5,14 @@
     height: 500px;
     width: 300px;
     margin-left: 50px;
-    margin-top: 50px;
     border: solid #343434 1px;
-    -webkit-transition: 0.5s cubic-bezier(.18,.56,.36,.81);
-    
+    -webkit-transition: 0.5s cubic-bezier(.18,.56,.36,.81); 
+}
+
+img 
+{
+    width: 300px;
+    height: 200px;
 }
 
 .container:hover
@@ -42,7 +46,7 @@
 	   color-stop(1, #787878),
 	   color-stop(1, #DED8D5));
     width: 100%;
-    height: 100px;
+    height: 50px;
     padding-top: 20px;
 }
 
@@ -117,7 +121,7 @@
 {
     position: absolute;
     width: 100%;
-    height: 10%;
+    height: 5%;
     bottom: 0px;
     background: #DED8D5;
     padding-top: 30px;
@@ -146,8 +150,7 @@ body
 }
 iframe
 {
-    margin: 0;
-    padding: 0;
+    height: 0;
 }
 
 

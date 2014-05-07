@@ -37,7 +37,8 @@ function createComponent(className, rawYouTubeData, number) {
     var container = document.createElement('div');
     container.innerHTML = '<div id = "' + rawYouTubeData.indexNumber + '" class="' + className + '"> \
     <div class= "title" >' + rawYouTubeData.title + ' </div> \
-    <iframe src= "' + rawYouTubeData.youtubeLink + '" allowfullscreen="" frameborder="0"></iframe> \
+    <img id = "img' + rawYouTubeData.indexNumber + '" src= "http://img.youtube.com/vi/' +rawYouTubeData.id + '/0.jpg" > \
+    <iframe id = "if' + rawYouTubeData.indexNumber + '" src= "" allowfullscreen=" "frameborder="0"></iframe> \
     <div class = "description"> ' + rawYouTubeData.description + '</div> \
     <div class= "author">' + rawYouTubeData.author + '</div> \
     <div class= "data">' + rawYouTubeData.publishDate + '</div> \
@@ -169,8 +170,22 @@ function selectingItem(item) {
     var elements = parent.children;
     for(var index = 0; index < elements.length; index++) {
         elements[index].style.height = "500px";
+        var ifr = document.getElementById("if" + index);
+        ifr.src = null;
+        ifr.style.height = "0";
+    
+        var image = document.getElementById("img" + index);
+        image.style.height = "200px";
     }
     item.style.height = "560px";
+    
+    var ifr = document.getElementById("if" + item.getAttribute('id'));
+    ifr.src = yotubeCollection[item.getAttribute('id')].youtubeLink;
+    ifr.style.height = "200px";
+    
+    var image = document.getElementById("img" + item.getAttribute('id'));
+    image.style.height = "0";
+    
 }
 
 var searchEvent = function(event) {
