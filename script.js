@@ -1,12 +1,16 @@
 var tilesNumber = 0;
 var selectedTile = 0;
+var mouseX = 0;
+var lastElementNumber = 0;
 
 var yotubeCollection;
+
 
 window.onresize =  function () {
     if ((freePlaceExists()) && (tilesNumber > 0)) {
         addElement(tilesNumber, yotubeCollection[tilesNumber], 300);
         window.tilesNumber++;
+        window.lastElementNumber ++;
     }
 
     if (((tilesNumber + 1) * 300 - self.innerWidth > 300) && (tilesNumber >1)) {
@@ -38,16 +42,16 @@ function createComponent(className, rawYouTubeData, number) {
     <div class= "views">' + rawYouTubeData.viewCount + '</div> \
     </div>';
     container.firstChild.onclick  = mouseClickEvent;
-return container.firstChild;
+    return container.firstChild;
 }
 
 function createMainContent(className) {
     'use strict';
     var container = document.createElement('div');
-    container.innerHTML = '<div id = "content" class="' + className + '"> \
-    <input type = "text" placeholder="Youtube search" onkeyup  = "searchEvent(event)" class = "searchBox"></input> \
-    </div>';
-return container.firstChild;
+    container.innerHTML = '<div id = "content" class="' + className + '"></div>';
+    container.firstChild.onmousedown = mouseDownEvent;
+    container.firstChild.onmouseup = mouseUpEvent;
+    return container.firstChild;
 }
 
 function createToolTip(className) {
@@ -55,11 +59,20 @@ function createToolTip(className) {
     var container = document.createElement('div');
     container.innerHTML = '<div id = "tooltip" class="' + className + '"> \
     </div>';
-return container.firstChild;
+    return container.firstChild;
+}
+
+function createHeader(className) {
+    'use strict';
+    var container = document.createElement('div');
+    container.innerHTML = '<div id = "header" class="' + className + '"> \
+    <input type = "text" placeholder="Youtube search" onkeyup  = "searchEvent(event)" class = "searchBox"></input> \
+    </div>';
+    return container.firstChild;
 }
 
 function setPosition(container, horizontalMargin) {
-    container.style.left = horizontalMargin + 'px';
+    container.style.left = 50 + horizontalMargin + 'px';
 }
 
 function addElement(number, someContent , elementWidth) {
@@ -108,6 +121,7 @@ function myJsonPCallback(data) {
     for(index = 0; index < window.tilesNumber; index++) {
         addElement(index, yotubeCollection[index], 300);             
     }
+    lastElementNumber = window.tilesNumber;
 }
 
 function createRequestURL() {
@@ -149,6 +163,42 @@ var searchEvent = function(event) {
     }
 }
 
+var mouseDownEvent = function(event) {
+    window.mouseX = event.pageX;
+}
+
+var mouseUpEvent = function(event) {
+    if (window.mouseX - event.pageX > 200) {
+        var content = document.getElementById("content");
+        content.removeChild(content.firstChild);     
+        var elements = content.children;
+        addElement(tilesNumber, yotubeCollection[lastElementNumber], 300);  
+        for(var index = 0; index < tilesNumber; index++) {
+            setPosition( elements[index], (300 + 40) * index);
+        }
+        window.lastElementNumber ++;
+    }
+    
+    if (event.pageX - window.mouseX > 200) {
+        var content = document.getElementById("content");
+        content.removeChild(content.lastChild);
+        window.lastElementNumber --;
+        var elements = content.children;
+        
+         for(var index = 0; index < tilesNumber - 1; index++) {
+            setPosition( elements[index], (300 + 40) * (index + 1));
+        }     
+      
+        var container = createComponent('container', yotubeCollection[lastElementNumber - tilesNumber], 0);
+        setPosition(container, (300 + 40) * 0);
+        content.insertBefore(container, content.firstChild);
+        addToToolltip(number);
+           
+        
+    }
+        
+}
+
 var mouseClickEvent = function(event) {
     selectingItem(event.target.parentNode);
     window.selectedTile = event.target.parentNode.getAttribute("id");
@@ -183,6 +233,8 @@ function removeFromToolTip() {
 }
 
 // **************** Functions declarations *********************************//
+var header = createHeader('header');
+document.body.appendChild(header);
 
 var content = createMainContent('content');
 document.body.appendChild(content);
