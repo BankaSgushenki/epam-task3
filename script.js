@@ -68,7 +68,7 @@ function createHeader(className) {
     'use strict';
     var container = document.createElement('div');
     container.innerHTML = '<div id = "header" class="' + className + '"> \
-    <input class = "scrollSetup" type = "text" placeholder="Scrool speed" id = "scrollSetup"></input> \
+    <input class = "scrollSetup" type = "text" placeholder="Scroll speed" id = "scrollSetup"></input> \
     <input type = "text" placeholder="Youtube search" onkeyup  = "searchEvent(event)" class = "searchBox" id = "searchBox"></input> \
     </div>';
     return container.firstChild;
@@ -186,8 +186,7 @@ var mouseDownEvent = function(event) {
 var mouseUpEvent = function(event) {
     var scrollSpeed;
     var setupFild = document.getElementById("scrollSetup");
-    console.log(setupFild.value);
-    if(setupFild.value == null)
+    if(setupFild.value == '')
         scrollSpeed = 1;
     else
         scrollSpeed = setupFild.value;
