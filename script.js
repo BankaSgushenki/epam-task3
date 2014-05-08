@@ -70,7 +70,7 @@ function createHeader(className) {
     var container = document.createElement('div');
     container.innerHTML = '<div id = "header" class="' + className + '"> \
     <input class = "scrollSetup" type = "text" placeholder="Scroll speed" id = "scrollSetup"></input> \
-    <input type = "text" placeholder="Youtube search" onkeyup  = "searchEvent(event)" class = "searchBox" id = "searchBox"></input> \
+    <input type = "text" placeholder="Youtube search" onkeyup  = "searchStart(event)" class = "searchBox" id = "searchBox"></input> \
     </div>';
     return container.firstChild;
 }
@@ -166,31 +166,36 @@ function clearAll() {
 }
 
 function selectingItem(item) {
-    var parent = document.getElementById("content");
-    var elements = parent.children;
-    for(var index = 0; index < elements.length; index++) {
-        elements[index].style.height = "500px";
+    var element;
+    for(var index = firstTileNumber; index < lastElementNumber; index++) {
+        element = document.getElementById(index);
+        element.style.height = "500px";
+    }
+    item.style.height = "560px";
+
+}
+
+function showVideo(item) {
+    var element;
+    for(var index = firstTileNumber; index < lastElementNumber; index++) {
+        element = document.getElementById(index);
         var ifr = document.getElementById("if" + index);
-        ifr.src = null;
+        ifr.src = "";
         ifr.style.height = "0";
-    
         var image = document.getElementById("img" + index);
         image.style.height = "200px";
     }
-    item.style.height = "560px";
-    
     var ifr = document.getElementById("if" + item.getAttribute('id'));
     ifr.src = yotubeCollection[item.getAttribute('id')].youtubeLink;
     ifr.style.height = "200px";
-    
     var image = document.getElementById("img" + item.getAttribute('id'));
     image.style.height = "0";
-    
+
 }
 
-var searchEvent = function(event) {
+var searchStart = function(event) {
     if((event.keyCode==13)||(event.keyCode==32)) { 
-        httpGet(createRequestURL()); 
+        httpGet(createRequestURL());
     }
 }
 
@@ -253,6 +258,7 @@ function scrollBack(distance) {
 
 var mouseClickEvent = function(event) {
     selectingItem(event.target.parentNode);
+    showVideo(event.target.parentNode);
     window.selectedTile = event.target.parentNode.getAttribute("id");
 }
 
@@ -266,6 +272,7 @@ var onTooltipClickEvent = function(event) {
         event.target.style.background = "#6aaad1";
         var item = document.getElementById(window.selectedTile);
         selectingItem(item);
+        showVideo(item);
     }
     else if (selectedTile >= lastElementNumber){
         scrollForward(selectedTile - lastElementNumber + 1);
