@@ -1,13 +1,20 @@
+@font-face { 
+    font-family: AppleGaramond;
+    src: url("/7fonts.ru_AppleGaramond");
+   }
+
 .container
 {
     position: absolute;
-    background: #f4f4f4;
+    background: #fff;
     height: 500px;
     width: 300px;
-    margin-left: 50px;
+    margin-left: 40px;
     border: solid #343434 1px;
-    -webkit-transition: 0.5s cubic-bezier(.18,.56,.36,.81); 
+    -webkit-transition: 0.5s cubic-bezier(.18,.56,.36,.81);
+    -webkit-box-shadow:0 3px 8px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.2) inset;
 }
+
 
 img 
 {
@@ -28,11 +35,11 @@ img
 	   linear,
 	   left top,
 	   left bottom,
-	   color-stop(0, #787878),
-	   color-stop(1, #DED8D5));
+	   color-stop(0, #f2f2f2),
+	   color-stop(1, #fff));
     width: 100%;
-    height: 80%;
-    padding-top: 20px;
+    height: 90%;
+
     top: 100px;
 }
 
@@ -43,8 +50,8 @@ img
 	   linear,
 	   left top,
 	   left bottom,
-	   color-stop(1, #787878),
-	   color-stop(1, #DED8D5));
+	   color-stop(1, #f2f2f2),
+	   color-stop(1, #f2f2f2));
     width: 100%;
     height: 50px;
     padding-top: 20px;
@@ -78,7 +85,7 @@ img
     height: 60px;
     font-size: 18px;
     font-weight: 900;
-    background: #363636;
+    background: #191919;
     color: #fdfdfd;
     padding: 10px;
 }
@@ -88,10 +95,11 @@ img
     position: absolute;
     height: 60px;
     width: 97px; 
-    background-image: -webkit-linear-gradient(top, #D1CFCA 18%, #F5F5F5 79%);
+    background-image: -webkit-linear-gradient(top, #555 18%, #676767 79%);
     bottom: 0;
-    border: solid 2px;
-    border-right: solid 1px;
+    border: solid black 2px;
+    color: #fdfdfd;
+    border-right: solid black 1px;
     text-align: center;
 }
 
@@ -121,10 +129,9 @@ img
 {
     position: absolute;
     width: 100%;
-    height: 5%;
+    height: 10%;
     bottom: 0px;
-    background: #DED8D5;
-    padding-top: 30px;
+    background: transparent;
 }
 
 .tileLink
@@ -136,6 +143,7 @@ img
     border-radius: 8px;
     border: 1px solid black;
     transition: background-color 0.25s;
+     -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.3), 0 0 7px rgba(0, 0, 0, 0.1) inset;
 
 }
 
@@ -146,11 +154,13 @@ img
 
 body
 {
-    background: #646262;
+    background: #f4f4f4;
 }
 iframe
 {
     height: 0;
+    margin: 0;
+    padding: 0;
 }
 
 

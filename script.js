@@ -269,7 +269,7 @@ var onTooltipClickEvent = function(event) {
         var parent = document.getElementById("tooltip");
         var elements = parent.children;
         updateTooltip();
-        event.target.style.background = "#6aaad1";
+        event.target.style.background = "#1d2e38";
         var item = document.getElementById(window.selectedTile);
         selectingItem(item);
         showVideo(item);
@@ -279,7 +279,7 @@ var onTooltipClickEvent = function(event) {
         var parent = document.getElementById("tooltip");
         var elements = parent.children;
         updateTooltip();
-        event.target.style.background = "#6aaad1";
+        event.target.style.background = "#1d2e38";
         var item = document.getElementById(window.selectedTile);
         selectingItem(item);
     }
@@ -288,7 +288,7 @@ var onTooltipClickEvent = function(event) {
         var parent = document.getElementById("tooltip");
         var elements = parent.children;
         updateTooltip();
-        event.target.style.background = "#6aaad1";
+        event.target.style.background = "#1d2e38";
         var item = document.getElementById(window.selectedTile);
         selectingItem(item);
     }
@@ -298,7 +298,7 @@ function addToToolltip(index) {
     var tooltip = document.getElementById("tooltip");
     var prototype = document.createElement('div');
     prototype.innerHTML = '<div id = "' + index + '" class="tileLink"></div>'
-    setPosition(prototype.firstChild, (200 + index* 50));
+    setPosition(prototype.firstChild, ((self.innerWidth - 800)/2 + index* 50));
     prototype.firstChild.onclick  = onTooltipClickEvent;
     tooltip.appendChild(prototype.firstChild);
 }
@@ -324,7 +324,7 @@ function updateTooltip() {
         if (index < firstTileNumber)
             links[index].style.background = "#fff";
         if ((index >= firstTileNumber) && (index < lastElementNumber))
-            links[index].style.background = "#c8e1ef";
+            links[index].style.background = "#cecece";
         else
             links[index].style.background = "#fff";
     }    
