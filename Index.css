@@ -24,7 +24,7 @@ img
 
 .container:hover
 {
-    height: 560px;   
+    height: 530px;   
     -webkit-transition: all 0.5s ease;
 }
 

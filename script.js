@@ -5,20 +5,86 @@ var mouseX = 0;
 var lastElementNumber = 0;
 
 var yotubeCollection;
+    
+var searchStart = function(event) {
+    if((event.keyCode==13)||(event.keyCode==32)) { 
+        httpGet(createRequestURL());
+    }
+}
+
+var mouseDownEvent = function(event) {
+    mouseX = event.pageX;
+}
+
+var mouseUpEvent = function(event) {
+    var scrollSpeed;
+    var setupFild = document.getElementById("scrollSetup");
+    if(setupFild.value == '')
+        scrollSpeed = 1;
+    else
+        scrollSpeed = setupFild.value;
+    if ((window.mouseX - event.pageX > 200) && (lastElementNumber < yotubeCollection.length)) {
+       scrollForward(scrollSpeed);
+    }
+    
+    if ((event.pageX - window.mouseX > 200) && (firstTileNumber > 0)){
+       scrollBack(scrollSpeed);
+    }
+        
+}
+
+var mouseClickEvent = function(event) {
+    showVideo(event.target.parentNode);
+    selectingItem(event.target.parentNode);
+    window.selectedTile = event.target.parentNode.getAttribute("id");
+    updateTooltip();
+}
+
+var onTooltipClickEvent = function(event) {
+    window.selectedTile = event.target.getAttribute("id");  
+    
+    if (( selectedTile < lastElementNumber)&&(selectedTile >= firstTileNumber)) {
+        var parent = document.getElementById("tooltip");
+        var elements = parent.children;
+        updateTooltip();
+        event.target.style.background = "#1d2e38";
+        var item = document.getElementById(window.selectedTile);
+        selectingItem(item);
+        showVideo(item);
+    }
+    else if (selectedTile >= lastElementNumber){
+        scrollForward(selectedTile - lastElementNumber + 1);
+        var parent = document.getElementById("tooltip");
+        var elements = parent.children;
+        updateTooltip();
+        event.target.style.background = "#1d2e38";
+        var item = document.getElementById(window.selectedTile);
+        selectingItem(item);
+    }
+    else if (selectedTile < firstTileNumber){
+        scrollBack(firstTileNumber - selectedTile);
+        var parent = document.getElementById("tooltip");
+        var elements = parent.children;
+        updateTooltip();
+        event.target.style.background = "#1d2e38";
+        var item = document.getElementById(window.selectedTile);
+        selectingItem(item);
+    }
+}
 
 
 window.onresize =  function () {
     if ((freePlaceExists()) && (tilesNumber > 0)) {
         addElement(tilesNumber, yotubeCollection[tilesNumber], 300);
-        window.tilesNumber++;
-        window.lastElementNumber ++;
+        tilesNumber++;
+        lastElementNumber ++;
     }
 
     if (((tilesNumber + 1) * 300 - self.innerWidth > 300) && (tilesNumber >1)) {
         var parent = document.getElementById("content");
         parent.removeChild(parent.lastChild);
-        window.lastElementNumber --;
-        window.tilesNumber--;
+        lastElementNumber --;
+        tilesNumber--;
     }
     updateTooltip();
 }
@@ -120,18 +186,18 @@ function httpGet(Url) {
 function myJsonPCallback(data) {
     var index;
     clearAll();
-    window.firstTileNumber = 0;
-    window.selectedTile = 0;
-    window.mouseX = 0;
-    window.lastElementNumber = 0;
+    firstTileNumber = 0;
+    selectedTile = 0;
+    mouseX = 0;
+    lastElementNumber = 0;
 
-    window.tilesNumber = (self.innerWidth - self.innerWidth % 300) / 300 - 1;
+    tilesNumber = (self.innerWidth - self.innerWidth % 300) / 300 - 1;
     yotubeCollection = convertYouTubeResponseToClipList(data);
-    for(index = 0; index < window.tilesNumber; index++) {
+    for(index = 0; index < tilesNumber; index++) {
         addElement(index, yotubeCollection[index], 300);             
     }
     createElementsMap();
-    lastElementNumber = window.tilesNumber;
+    lastElementNumber = tilesNumber;
     updateTooltip();
 }
 
@@ -152,7 +218,7 @@ function clearAll() {
     if(window.tilesNumber!=0) {
         var parent = document.getElementById("content");
         var elements = parent.children;
-        for(index = 0; index < window.tilesNumber; index++) {
+        for(index = 0; index < tilesNumber; index++) {
             parent.removeChild(parent.lastChild);
         }
         var tooltip = document.getElementById("tooltip");
@@ -171,7 +237,7 @@ function selectingItem(item) {
         element = document.getElementById(index);
         element.style.height = "500px";
     }
-    item.style.height = "560px";
+    item.style.height = "530px";
 
 }
 
@@ -193,41 +259,14 @@ function showVideo(item) {
 
 }
 
-var searchStart = function(event) {
-    if((event.keyCode==13)||(event.keyCode==32)) { 
-        httpGet(createRequestURL());
-    }
-}
-
-var mouseDownEvent = function(event) {
-    window.mouseX = event.pageX;
-}
-
-var mouseUpEvent = function(event) {
-    var scrollSpeed;
-    var setupFild = document.getElementById("scrollSetup");
-    if(setupFild.value == '')
-        scrollSpeed = 1;
-    else
-        scrollSpeed = setupFild.value;
-    if ((window.mouseX - event.pageX > 200) && (lastElementNumber < yotubeCollection.length)) {
-       scrollForward(scrollSpeed);
-    }
-    
-    if ((event.pageX - window.mouseX > 200) && (firstTileNumber > 0)){
-       scrollBack(scrollSpeed);
-    }
-        
-}
-
 function scrollForward(distance) {
     var content = document.getElementById("content");
     var index;
     for(index = 0; index < distance; index++) {
         content.removeChild(content.firstChild);
         addElement(tilesNumber, yotubeCollection[lastElementNumber], 300); 
-        window.lastElementNumber ++;
-        window.firstTileNumber ++;
+        lastElementNumber ++;
+        firstTileNumber ++;
     }
     var elements = content.children;
     for(index = 0; index < tilesNumber; index++) {
@@ -242,8 +281,8 @@ function scrollBack(distance) {
         var content = document.getElementById("content");
         console.log(index);
         content.removeChild(content.lastChild);
-        window.lastElementNumber --;
-        window.firstTileNumber --;
+        lastElementNumber --;
+        firstTileNumber --;
     var elements = content.children;
     var container = createComponent('container', yotubeCollection[lastElementNumber - tilesNumber], 0);
     setPosition(container, (300 + 40) * 0);
@@ -253,45 +292,6 @@ function scrollBack(distance) {
         setPosition( elements[index], (300 + 40) * (index));
     }
     updateTooltip();
-}
-
-
-var mouseClickEvent = function(event) {
-    selectingItem(event.target.parentNode);
-    showVideo(event.target.parentNode);
-    window.selectedTile = event.target.parentNode.getAttribute("id");
-}
-
-var onTooltipClickEvent = function(event) {
-    window.selectedTile = event.target.getAttribute("id");  
-    
-    if (( selectedTile < lastElementNumber)&&(selectedTile >= firstTileNumber)) {
-        var parent = document.getElementById("tooltip");
-        var elements = parent.children;
-        updateTooltip();
-        event.target.style.background = "#1d2e38";
-        var item = document.getElementById(window.selectedTile);
-        selectingItem(item);
-        showVideo(item);
-    }
-    else if (selectedTile >= lastElementNumber){
-        scrollForward(selectedTile - lastElementNumber + 1);
-        var parent = document.getElementById("tooltip");
-        var elements = parent.children;
-        updateTooltip();
-        event.target.style.background = "#1d2e38";
-        var item = document.getElementById(window.selectedTile);
-        selectingItem(item);
-    }
-    else if (selectedTile < firstTileNumber){
-        scrollBack(firstTileNumber - selectedTile);
-        var parent = document.getElementById("tooltip");
-        var elements = parent.children;
-        updateTooltip();
-        event.target.style.background = "#1d2e38";
-        var item = document.getElementById(window.selectedTile);
-        selectingItem(item);
-    }
 }
 
 function addToToolltip(index) {
@@ -328,9 +328,9 @@ function updateTooltip() {
         else
             links[index].style.background = "#fff";
     }    
+    links[selectedTile].style.background = "#1d2e38";
 }
 
-// **************** Functions declarations *********************************//
 var header = createHeader('header');
 document.body.appendChild(header);
 
